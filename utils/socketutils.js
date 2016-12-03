@@ -27,7 +27,7 @@ var cleanData = function(data) {
 
 var updateData = function(result, defer) {
     var newcount = result.activity * result.count;
-    var promise = Equipment.update({
+    Equipment.update({
         equipmentId: result.equipmentId,
     }, {
         $inc: {
@@ -35,15 +35,13 @@ var updateData = function(result, defer) {
         }
     }, {
         upsert: true
-    });
-    promise.then(function(resp) {
-            console.log("updated");
-            defer.resolve("updated");
-        })
-        .catch(function(err) {
-            console.log(err);
+    }, function(err, res) {
+        if (err) {
             defer.reject(err);
-        });
+        }
+        console.log(result);
+        defer.resolve("updated");
+    });
 }
 
 
@@ -51,7 +49,7 @@ var parseData = function(data, db, done) {
     var defer = q.defer();
     var results = cleanData(data);
     if (results.hasOwnProperty('activity') && results.hasOwnProperty('equipmentId') && results.hasOwnProperty('count')) {
-         updateData(results, defer);
+        updateData(results, defer);
     } else {
         defer.reject('err');
         return;
