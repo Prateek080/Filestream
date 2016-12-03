@@ -22,7 +22,7 @@ var getEquipmentsById = function(req, res) {
   var equipmentId = req.params['id'];
   var cursor = Equipment.find({
     where : {
-      equipmentId : instrument_id
+      equipmentId : equipmentId
     }
   });
   cursor.exec(function(err, data) {
